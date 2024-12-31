@@ -7,7 +7,7 @@ import datetime
 import json
 
 # This projects makes use of mongodb to store data temporarily, This is the "connection string".
-uri = "mongodb+srv://rftestingnyc:<db_password>@forextogo.1fg9b.mongodb.net/?retryWrites=true&w=majority&appName=ForexToGo"
+uri = "mongodb+srv://rftestingnyc:8KU1LA2czETkqk0Z@forextogo.1fg9b.mongodb.net/?retryWrites=true&w=majority&appName=ForexToGo"
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -135,18 +135,22 @@ stamp I will compare the current day to the day the data was posted on. If these
 MongoDB with new information.
 '''
 
-# Adding the date posted timestamp to the first dictionary of the collection, and keeping track of the time this script is run.
+# Adding the date posted timestamp to the all dictionaries of the collection. This helps keep track of when the date was posted.
 posted_time = str(datetime.datetime.now())
 News_Event_Title_Dictionary["timestamp"] = f"{posted_time}"
+Currencies_Impacted_Dictionary["timestamp"] = f"{posted_time}"
+Event_Impact_Level_Dictionary["timestamp"] = f"{posted_time}"
+Calendar_Time_Dict["timestamp"] = f"{posted_time}"
 
 """
 This system runs on the assumption that a timestamp already exists. When a timestamp is first uploaded to the dictionary datetime is considered 
 the date it was posted. The nth time this script is run we are simply comparing. There should be a timestamp from the previous time we uploaded
 datetime, we will compare that to the current datetime.now, or in other words the date right now, to see if they are different.
 """
-# This is the string showing todays date in the form 2024-11-14.
-current_time = str(datetime.datetime.now)
+# This is the string showing todays date in the form 20YY-DD-MM.
+current_time = str(datetime.datetime.now())
 date_today = (current_time[0:10])
+print(date_today)
 
 #json.dumps() turns the dictionary into raw JSON data which is easier to transfer.
 shareable_data = json.dumps(News_Event_Title_Dictionary)
@@ -161,26 +165,33 @@ query_filter4 = {"MyID": "Time_Dictionary"}
 
 # Gets the {"timestamp":"<date>"} entry info from MongoDB and saves the date "20YY-MM-DD" into date_posted
 get_timestamp = collection_file.distinct("timestamp")
-timestamp = get_timestamp[0]
-date_posted = timestamp[0:10]
 
-# I only ever want there to be 3 entries each day. If there are already 3 entries from the same day, nothing is added.
-if dictionary_count < 4:
-    # Inserting each dict. into MongoDB, I'm not sure why but collection.insert_many(d1,d2,d3) didnt work so I did it separately.
+# I only ever want there to be 4 entries each day. If there are already 4 entries from the same day, nothing is added.
+if dictionary_count == 0:
+    # If there  each dictionary into MongoDB.
     a = collection_file.insert_one(News_Event_Title_Dictionary) 
     b = collection_file.insert_one(Currencies_Impacted_Dictionary)
     c = collection_file.insert_one(Event_Impact_Level_Dictionary)
     d = collection_file.insert_one(Calendar_Time_Dict)
-elif dictionary_count >= 4:
+elif dictionary_count <= 4:
+    # If theres already documents we can check for a timestamp string in the first doc of the collection.
+    timestamp = get_timestamp[0]
+    date_posted = timestamp[0:10]
+    print(date_posted)
     if date_today != date_posted:
-        collection_file.replace_one(query_filter1, News_Event_Title_Dictionary)
-        collection_file.replace_one(query_filter2, Currencies_Impacted_Dictionary)
-        collection_file.replace_one(query_filter3, Event_Impact_Level_Dictionary)
-        collection_file.replace_one(query_filter4, Calendar_Time_Dict)
-elif dictionary_count >= 4 and date_today == date_posted:
-    print("Forex data is already on MongoDB. Nothing will be changed.")
-else:
-    print("Some error has occured.")
+            print("Old or insufficient data detected. Replacing with most recent data.")
+            x = collection_file.delete_many({})
+            a = collection_file.insert_one(News_Event_Title_Dictionary) 
+            b = collection_file.insert_one(Currencies_Impacted_Dictionary)
+            c = collection_file.insert_one(Event_Impact_Level_Dictionary)
+            d = collection_file.insert_one(Calendar_Time_Dict)
+            # Ignore.
+            # collection_file.replace_one(query_filter1, News_Event_Title_Dictionary)
+            # collection_file.replace_one(query_filter2, Currencies_Impacted_Dictionary)
+            # collection_file.replace_one(query_filter3, Event_Impact_Level_Dictionary)
+            # collection_file.replace_one(query_filter4, Calendar_Time_Dict)
+    else:
+        print("Some error has occured. Nothing was changed. Note: If today's date was logged twice the data should be up to date.")
 
 # Finds the documents I need and turns them into strings. If I don't returning these variables throws an error.
 News_doc = str(collection_file.find_one(query_filter1))
