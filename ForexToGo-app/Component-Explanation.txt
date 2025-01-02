@@ -1,0 +1,50 @@
+React elements work similar to javascript. However two cannot just be set side by side without being wrapped in a fragment or else errors will occur.
+
+fragment: <></>
+
+proper way:
+<>
+  <element></element>
+  <element></element>
+</>
+
+error:
+
+<element></element>
+<element></element>
+
+you can make custom components like <Text> yourself in react. They must start with a capital letter.
+
+above "export default function app()" you can define a component by doing
+
+function CustomComponent() {
+	return <element id="id">content</element>
+}
+
+Then all you need to do to recreate it is call CustomComponent like
+
+<div>
+   <CustomComponent/>
+<div>
+
+if you want to be able to pass data you can use a custom parameter like "id" to do so. This is how you create that
+
+function CustomComponent()...  --> function CustomComponent({parameter})...
+
+function CustomComponent({parameter}) {
+  return <button>{parameter}</button>
+}
+...
+<CustomComponent parameter={"hello world"}/>
+output: button that says hello world\
+
+
+If you want it to have functionality when clicked we can add more to the function. We can define a function within our component and using HTML's basic
+element properties we can call that function. We'll be using "onClick" inside of our button element to call the function
+
+function CustomComponent({parameter}) {
+  function WhenClicked(){
+	console.log("button clicked")
+ }
+  return <button onClick={WhenClicked}>{parameter}</button>
+}
