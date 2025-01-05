@@ -1,64 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-export default function App() {
-  const [data, setData] = useState([]); // State to store fetched data
-  const [loading, setLoading] = useState(true); // State to track loading status
+//creates a component function using const 
+const MyComponent = ({text}) => (
+  <View>
+    <Text>{text}</Text>
+  </View>
+);
 
-  useEffect(() => {
-    // Fetch data from the Flask API when the component mounts
-    fetch('http://127.0.0.1:5000/')  // Replace with your Flask API URL
-      .then(response => response.json()) // Parse the response as JSON
-      .then(data => {
-        setData(data); // Set the fetched data into state
-        setLoading(false); // Stop loading
-      })
-      .catch(error => {
-        console.error("There was an error fetching data:", error);
-        setLoading(false);
-      });
-  }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+// Creates a list of items, adds a custom entry, then renders each entry as a component.
+const App = () => {
+  const items = [];
+
+  let counter = 0
+  let num_events = 1
+  // Forloop that will be linked to the number of events in fetched data.
+  // Not sure why but the comparitor against the array length must be 4x the number of events for the day.
+  for (counter = 0; items.length < num_events*4; counter++ ){
+    items.push("...")
+    items.push("...")
+    items.push("...")
+    items.push("...")
   }
 
-  return (
+  return ( 
     <View style={styles.container}>
-      <Text style={styles.title}>Data from MongoDB:</Text>
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text>{JSON.stringify(item)}</Text>
-          </View>
-        )}
-      />
+      {items.map((content, index_num) => (
+        <MyComponent key={index_num} text={content} />
+      ))}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  item: {
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    width: '100%',
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  item: { margin: 10, padding: 20, backgroundColor: '#ccc', borderRadius: 10 },
 });
+
+export default App;

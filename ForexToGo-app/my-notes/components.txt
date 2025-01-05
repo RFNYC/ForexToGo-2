@@ -21,30 +21,42 @@ function CustomComponent() {
 	return <element id="id">content</element>
 }
 
+OR:
+
+const NewComponent = () => {
+  return <Text>this is my content</Text>
+}
+
 Then all you need to do to recreate it is call CustomComponent like
 
 <div>
    <CustomComponent/>
 <div>
 
-if you want to be able to pass data you can use a custom parameter like "id" to do so. This is how you create that
+if you want to be able to pass a value you can use a custom property similar to how is used "id" to do so. 
+You can also use this to create properties that call variables or functions.
 
-function CustomComponent()...  --> function CustomComponent({parameter})...
+*Property names are arbitrary
+Property: string
+Property2: calls a function
 
-function CustomComponent({parameter}) {
-  return <button>{parameter}</button>
+function CustomComponent()...  --> function CustomComponent({ property, property2 })...
+
+function CustomComponent({property, property2}) {
+  return <button property={"hello-world"} property2={clickEvent}>{property}</button>
 }
 ...
-<CustomComponent parameter={"hello world"}/>
-output: button that says hello world\
+<CustomComponent/>
+output: button that says hello world
+change {property} within the button element to {property2} to get the output of whatever function.
 
 
 If you want it to have functionality when clicked we can add more to the function. We can define a function within our component and using HTML's basic
 element properties we can call that function. We'll be using "onClick" inside of our button element to call the function
 
-function CustomComponent({parameter}) {
+function CustomComponent({property}) {
   function WhenClicked(){
 	console.log("button clicked")
  }
-  return <button onClick={WhenClicked}>{parameter}</button>
+  return <button onClick={WhenClicked}>{property}</button>
 }

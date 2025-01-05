@@ -1,0 +1,64 @@
+USE STATE:
+
+React components ( <Text/> ) have the ability to remember certain values called a "state" with useEffect heres how to do that.
+
+import { useEffect } from "react";
+
+value is the original variable and setValue is a function that allows it to be changed
+useEffect() is the initial value of the variable
+
+This says create a variable named value that can be changed, its initial value is null (nothing).
+function randomComponent() {
+    const [value, setValue] = useEffect(null)
+}
+
+Using a nested function and setValue(); we can change this variable
+
+This is a button whos content starts off as nothing but changes to C when clicked.
+function randomComponent() {
+    const [value, setValue] = useEffect(null)
+   function clickEvent() {
+	console.log("button was clicked")
+	setValue("C");
+   }
+  return (
+    <button onClick={clickEvent}> {value} </button
+ )	
+}
+
+If you want to have several unique states and have them communicate with one another or collect data its not practical to do this for each one. 
+Instead, create an array (list) of states from one parent and then have the parent pass it to the children.
+The children can be rows on a spreadsheet or squares on a chess board. For example you have 3 rows and 3 unique news articles. 
+Its most practical to fetch the articles first and then have the parent container of those 3 rows pass it to them individually. 
+This is a common practice called "lifting state up".
+
+example of an array: ['O', null, 'X', 'X', 'X', 'O', 'O', null, null]
+
+Heres how you can lift a state to the parent.
+
+Your component might look like this:
+
+function randomComponent({value}) {
+    --sets current value to nothing
+    const [state, setState] = useEffect(null)
+
+    function someEvent() {
+        setState("new_value");
+    }
+}
+
+Start by making a parent function which will act as a sort of div container for it all. Then create an array (group) of "states".
+These states will be passed down to your components through some indexing (states[num]) after their value is set by someEvent. 
+For this example will use the 3 rows example:
+
+export default function componentContainer() {
+    const [states, setStates] = useEffect(Array(3).fill(null))
+
+    return (
+        <div className="board-row">
+        <randomComponent value={states[0]}/>
+        <randomComponent value={states[1]}/>
+        <randomComponent value={states[2]}/>
+      </div>
+    )
+}
