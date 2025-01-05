@@ -19,7 +19,6 @@ try:
 except Exception as e:
     print(e)
 
-
 # To write in here you need to change your python interpereter to the one inside the .venv file in Forex-Project.
 # because a .venv is an isolated environment from all the other versions of python and packages on the machine using any other interpereter will
 # cause errors when trying to write/run code here.
@@ -166,32 +165,43 @@ query_filter4 = {"MyID": "Time_Dictionary"}
 # Gets the {"timestamp":"<date>"} entry info from MongoDB and saves the date "20YY-MM-DD" into date_posted
 get_timestamp = collection_file.distinct("timestamp")
 
+# Asks the user whether or not to run the script without scraping new data.
+print("Would you like to run the server using existing server data? (Best on weekends when theres no data to collect.)")
+print('"Y" for yes, "N" for no. ')
+answer = input().upper()
+print(f'You answered "{answer}"')
+if answer == "Y":
+    Response = "Running with existing server data..."
+
+try:
+    print(Response)
+except:
 # I only ever want there to be 4 entries each day. If there are already 4 entries from the same day, nothing is added.
-if dictionary_count == 0:
-    # If there  each dictionary into MongoDB.
-    a = collection_file.insert_one(News_Event_Title_Dictionary) 
-    b = collection_file.insert_one(Currencies_Impacted_Dictionary)
-    c = collection_file.insert_one(Event_Impact_Level_Dictionary)
-    d = collection_file.insert_one(Calendar_Time_Dict)
-elif dictionary_count <= 4:
-    # If theres already documents we can check for a timestamp string in the first doc of the collection.
-    timestamp = get_timestamp[0]
-    date_posted = timestamp[0:10]
-    print(date_posted)
-    if date_today != date_posted:
-            print("Old or insufficient data detected. Replacing with most recent data.")
-            x = collection_file.delete_many({})
-            a = collection_file.insert_one(News_Event_Title_Dictionary) 
-            b = collection_file.insert_one(Currencies_Impacted_Dictionary)
-            c = collection_file.insert_one(Event_Impact_Level_Dictionary)
-            d = collection_file.insert_one(Calendar_Time_Dict)
-            # Ignore.
-            # collection_file.replace_one(query_filter1, News_Event_Title_Dictionary)
-            # collection_file.replace_one(query_filter2, Currencies_Impacted_Dictionary)
-            # collection_file.replace_one(query_filter3, Event_Impact_Level_Dictionary)
-            # collection_file.replace_one(query_filter4, Calendar_Time_Dict)
-    else:
-        print("Some error has occured. Nothing was changed. Note: If today's date was logged twice the data should be up to date.")
+    if dictionary_count == 0:
+        # If there  each dictionary into MongoDB.
+        a = collection_file.insert_one(News_Event_Title_Dictionary) 
+        b = collection_file.insert_one(Currencies_Impacted_Dictionary)
+        c = collection_file.insert_one(Event_Impact_Level_Dictionary)
+        d = collection_file.insert_one(Calendar_Time_Dict)
+    elif dictionary_count <= 4:
+        # If theres already documents we can check for a timestamp string in the first doc of the collection.
+        timestamp = get_timestamp[0]
+        date_posted = timestamp[0:10]
+        print(date_posted)
+        if date_today != date_posted:
+                print("Old or insufficient data detected. Replacing with most recent data.")
+                x = collection_file.delete_many({})
+                a = collection_file.insert_one(News_Event_Title_Dictionary) 
+                b = collection_file.insert_one(Currencies_Impacted_Dictionary)
+                c = collection_file.insert_one(Event_Impact_Level_Dictionary)
+                d = collection_file.insert_one(Calendar_Time_Dict)
+                # Ignore.
+                # collection_file.replace_one(query_filter1, News_Event_Title_Dictionary)
+                # collection_file.replace_one(query_filter2, Currencies_Impacted_Dictionary)
+                # collection_file.replace_one(query_filter3, Event_Impact_Level_Dictionary)
+                # collection_file.replace_one(query_filter4, Calendar_Time_Dict)
+        else:
+            print("Some error has occured. Nothing was changed. Note: If today's date was logged twice the data should be up to date.")
 
 # Finds the documents I need and turns them into strings. If I don't returning these variables throws an error.
 News_doc = str(collection_file.find_one(query_filter1))
