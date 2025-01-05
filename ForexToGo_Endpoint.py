@@ -151,11 +151,6 @@ current_time = str(datetime.datetime.now())
 date_today = (current_time[0:10])
 print(date_today)
 
-#json.dumps() turns the dictionary into raw JSON data which is easier to transfer.
-shareable_data = json.dumps(News_Event_Title_Dictionary)
-shareable_data2 = json.dumps(Currencies_Impacted_Dictionary)
-shareable_data3 = json.dumps(Event_Impact_Level_Dictionary)
-
 # Here are the Search filters to each dictionary:
 query_filter1 = {"MyID": "News_Dictionary"}
 query_filter2 = {"MyID": "Currency_Dictionary"}
@@ -204,16 +199,23 @@ except:
             print("Some error has occured. Nothing was changed. Note: If today's date was logged twice the data should be up to date.")
 
 # Finds the documents I need and turns them into strings. If I don't returning these variables throws an error.
-News_doc = str(collection_file.find_one(query_filter1))
-Currency_doc = str(collection_file.find_one(query_filter2))
-Impact_doc = str(collection_file.find_one(query_filter3))
-Time_doc = str(collection_file.find_one(query_filter4))
+# Also removed the "_id": ObjectID(...) field, it wasn't necessary and caused problems when converting to JSON.
+News_doc = (collection_file.find_one(query_filter1,{'_id': False}))
+Currency_doc = (collection_file.find_one(query_filter2,{'_id': False}))
+Impact_doc = (collection_file.find_one(query_filter3,{'_id': False}))
+Time_doc = (collection_file.find_one(query_filter4,{'_id': False}))
+
+# Combines the strings from all dictionaries into one variable then formats it into JSON by editing the string.
+combinedData = (f'{News_doc},{Currency_doc},{Impact_doc},{Time_doc}')
+combinedData = combinedData.replace("'",'"')
+serverOutput = ("["+combinedData+"]")
+# print(serverOutput)
 
 @app.route("/data")
 def database():
 
     # return signals the instance to show the user whatever we data we scraped and saved into the dictionary previously.
-    return (News_doc+Currency_doc+Impact_doc+Time_doc), 200
+    return (serverOutput), 200
 
 driver.close()
 

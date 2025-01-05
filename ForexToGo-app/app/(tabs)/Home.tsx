@@ -30,6 +30,7 @@ export default function Index() {
   let num_events = 6
   // Forloop that will be linked to the number of events in fetched data.
   // Not sure why but the comparitor against the array length must be 4x the number of events for the day.
+  // Every iteration the loop appends information about that event to the list.
   for (counter = 0; items.length < num_events*4; counter++ ){
     items.push(event_name)
     items.push(currency)
@@ -56,6 +57,7 @@ export default function Index() {
       <Text style={styles.subheader}>Todays News:</Text>
       <Text id="line">⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
       <Link href={"/about"} style={styles.Links}>DATA.</Link>   
+      {/*ngl i dont have a good handle on this code. See https://legacy.reactjs.org/docs/lists-and-keys.html for more info.*/}
       {items.map((content, index_num) => (
         <MyComponent key={index_num} text={content} />
       ))}
