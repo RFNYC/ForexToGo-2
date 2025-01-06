@@ -53,6 +53,7 @@ function NewComponent() {
         .then(response => response.json())
         .then((data) => {
             console.log(data);
+            # saves the data from fetch into the useState var.
             setData(data)
         })
         .catch(error => {

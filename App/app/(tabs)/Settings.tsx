@@ -14,18 +14,22 @@ function NewComponent() {
   useEffect(() => {
       // # anytime fetch() is used the output is returned in a "promise" called a "response" object.
       // # in order to get the data from the object you need to do something to the response
-      fetch('https://mywebsite.com/mydata.json')
+      fetch('http:localhost:5000')
         .then(response => response.json())
         .then((data) => {
-            console.log(data);
-            setData(data)
+            console.log(data)
+            console.log(data[0]);
+            const newsEvents = data[0]
+            const newID = newsEvents["MyID"]
+            console.log(newsEvents["MyID"])
+            setData(newID)
       })
       .catch(error => {
               console.error('Error fetching data:', error);
           });
   }, [])
-
-  return <p>check console for data</p>
+ 
+  return <p>{data}</p>
 }
 
 // Creates a list of items, adds a custom entry, then renders each entry as a component.

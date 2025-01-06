@@ -1,13 +1,14 @@
+from flask import Flask
+from flask_cors import CORS
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import socket
 import datetime
-import json
 
 # This projects makes use of mongodb to store data temporarily, This is the "connection string".
-uri = "mongodb+srv://rftestingnyc:8KU1LA2czETkqk0Z@forextogo.1fg9b.mongodb.net/?retryWrites=true&w=majority&appName=ForexToGo"
+uri = "mongodb+srv://rftestingnyc:<db-password>@forextogo.1fg9b.mongodb.net/?retryWrites=true&w=majority&appName=ForexToGo"
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -28,6 +29,7 @@ from flask import Flask, request
 
 # Creates an instance of the flask class framework and saves it in a var "app" to be called later.
 app = Flask(__name__)
+CORS(app)
 
 # Get the local machine name
 hostname = socket.gethostname()
@@ -122,10 +124,10 @@ for news_entry_num in range(len(News_Event_Titles_List)):
 # Using collection_file.find_one(query_filter) produces a none type which caused errors so I had to get each document again manually.
 # I figured out that when the script is run again, if the data is replaced, so is the ID. Adding a custom ID works around this
 # This for adds a custom ID entry so that regardless of if the MongoDB set ID or scraped info ever changes I can still call dictionaries later.
-News_Event_Title_Dictionary["MyID"] = "News_Dictionary"
-Currencies_Impacted_Dictionary["MyID"] = "Currency_Dictionary"
-Event_Impact_Level_Dictionary["MyID"] = "Impact_Dictionary"
-Calendar_Time_Dict["MyID"] = "Time_Dictionary"
+News_Event_Title_Dictionary["SectionID"] = "News_Dictionary"
+Currencies_Impacted_Dictionary["SectionID"] = "Currency_Dictionary"
+Event_Impact_Level_Dictionary["SectionID"] = "Impact_Dictionary"
+Calendar_Time_Dict["SectionID"] = "Time_Dictionary"
 
 '''
 Because I didn't understand how to delete files automatically via MongoDB's expiration/timeseries system I opted to use an impromptu timestamp
@@ -152,10 +154,10 @@ date_today = (current_time[0:10])
 print(date_today)
 
 # Here are the Search filters to each dictionary:
-query_filter1 = {"MyID": "News_Dictionary"}
-query_filter2 = {"MyID": "Currency_Dictionary"}
-query_filter3 = {"MyID": "Impact_Dictionary"}
-query_filter4 = {"MyID": "Time_Dictionary"}
+query_filter1 = {"SectionID": "News_Dictionary"}
+query_filter2 = {"SectionID": "Currency_Dictionary"}
+query_filter3 = {"SectionID": "Impact_Dictionary"}
+query_filter4 = {"SectionID": "Time_Dictionary"}
 
 # Gets the {"timestamp":"<date>"} entry info from MongoDB and saves the date "20YY-MM-DD" into date_posted
 get_timestamp = collection_file.distinct("timestamp")
