@@ -57,10 +57,6 @@ export default function Index() {
       <Text style={styles.subheader}>Todays News:</Text>
       <Text id="line">⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
       <Link href={"/about"} style={styles.Links}>DATA.</Link>   
-      {/*ngl i dont have a good handle on this code. See https://legacy.reactjs.org/docs/lists-and-keys.html for more info.*/}
-      {items.map((content, index_num) => (
-        <MyComponent key={index_num} text={content} />
-      ))}
 
     </View>
   );

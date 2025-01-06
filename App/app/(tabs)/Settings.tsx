@@ -8,32 +8,63 @@ const MyComponent = ({text}) => (
   </View>
 );
 
-function NewComponent() {
-  const [data , setData] = useState(null)
-
-  useEffect(() => {
-      // # anytime fetch() is used the output is returned in a "promise" called a "response" object.
-      // # in order to get the data from the object you need to do something to the response
-      fetch('http:localhost:5000')
-        .then(response => response.json())
-        .then((data) => {
-            console.log(data)
-            console.log(data[0]);
-            const newsEvents = data[0]
-            const newID = newsEvents["MyID"]
-            console.log(newsEvents["MyID"])
-            setData(newID)
-      })
-      .catch(error => {
-              console.error('Error fetching data:', error);
-          });
-  }, [])
- 
-  return <p>{data}</p>
+function NewComponent({text}) {
+  return <Text>{text}</Text>
 }
 
 // Creates a list of items, adds a custom entry, then renders each entry as a component.
 const App = () => {
+
+  // The only way we can get the info we fetch later to render onto the page we need to have a useState.
+  // useStates track changes to the array and if changed the page re-renders with those changes.
+  // We're gonna create a state outside the useEffect which happens after the page loads to prepare.
+  // creates a var "prepArray" sets it equal to an array.
+  const [prepArray, setPrepArray] = useState([])
+
+  useEffect(() => {
+    // See https://reactnative.dev/docs/network the template.
+    // anytime fetch() is used the output is returned in a "promise" called a "response" object.
+    // in order to get the data from the object you need to do something to the response.
+    fetch('api')
+    // after we recieve that response we returned it in a JSON format
+    // then with the data we can choose to return number of things within the brackets {}.
+      .then(response => response.json())
+      .then((data) => {
+          console.log(data)
+          // JS object containing news titles (dict in python)
+          const newsEvents = data[0]
+          const currenciesImpacted = data[1]
+          const impactLevels = data[2]
+          const calendarTimes = data[3]
+          const content = []
+          // THANK YOU W3SCHOOLS !!! --> Creates an array [] of the possible object keys. Makes it easy to grab each one with an iterator
+          // I used counter as my iterator and then once I had the required key I passed it to the newsEvents object.
+          let eventKeys = Object.keys(newsEvents)
+          let currencyKeys = Object.keys(currenciesImpacted)
+          let impactKeys = Object.keys(impactLevels)
+          let calenderKeys = Object.keys(calendarTimes)
+          for (let counter = 0; counter < eventKeys.length; counter++) {
+            var eventCell = eventKeys[counter]
+            var currencyCell = currencyKeys[counter]
+            var impactCell = impactKeys[counter]
+            var calenderCell = calenderKeys[counter]
+            
+            // `${}` essentially works in the same way as f"{}" in python does.
+            // content.push(x) appends x to the array.
+            content.push(newsEvents[`${eventCell}`])
+            content.push(currenciesImpacted[`${currencyCell}`])
+            content.push(impactLevels[`${impactCell}`])
+            content.push(calendarTimes[`${calenderCell}`])
+          }    
+          setPrepArray(content)
+          console.log(content)
+  
+    })
+    .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+  }, [])
+
   const items = [];
 
   let counter = 0
@@ -49,11 +80,11 @@ const App = () => {
 
   return ( 
     <View style={styles.container}>
-      {items.map((content, index_num) => (
+      {prepArray.map((content, index_num) => (
         <MyComponent key={index_num} text={content} />
         
       ))}
-      <NewComponent/>
+      <NewComponent text={"check console."}/>      
     </View>
   );
 };
