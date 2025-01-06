@@ -1,0 +1,64 @@
+useEffect
+
+useEffects in short, are like functions that deal with non predictable outcomes like fetching from an api.
+Because we don't know what we're gonna get or if it will work useEffects are used. useEffects aren't apart of the main
+rendering. It happens after the fact, so theres no interference with the rest of the component it might be in.
+
+heres the syntax for useEffect:
+
+import { useEffect } from 'react';
+
+function CustomComponent() {
+    # call useEffect above JSX
+    # passes two arguments to the useEffect function:  a callback function (denoted by: () => {}) and an array (denoted by [])
+    # useEffect tell the component to run whatever's inside the brackets after the page renders, the array means it only runs once on mount.
+    useEffect(() => {}, [])
+
+    return ...
+}
+
+Example:
+import { useEffect } from 'react';
+
+function User({ name }) {
+
+  # This is basically saying: after the page has rendered change the browser tab title to the name given by the component's prop and rerender.
+  # You must also have name in the array, this will check if "name" has changed between renders.
+  # If you do not include an array useEffect will run after every render, this could cause an infinite loop. 
+  useEffect(() => {
+    document.title = name;
+  }, [name]);
+
+  return <h1>{name}</h1>;   
+}
+
+Usage: 
+<User name="bob"/>
+
+output: 
+The page will return a <h1> element with the content "bob" but the browser tab title will also be changed.
+
+
+Here's a common example of how to fetch data within a component.
+Note: fetch() is its own function, see more here: https://reactnative.dev/docs/network
+
+function NewComponent() {
+    const [data , setData] = useState(null)
+
+    useEffect(() => {
+        # anytime fetch() is used the output is returned in a "promise" called a "response" object.
+        # in order to get the data from the object you need to do something to the response
+        fetch('https://mywebsite.com/mydata.json');
+        # this takes the response and turns it into json, however this returns another promise so we need to 
+        .then(response => response.json())
+        .then((data) => {
+            console.log(data);
+            setData(data)
+        })
+        .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, [])
+
+    return <p>check console for data<p>
+}

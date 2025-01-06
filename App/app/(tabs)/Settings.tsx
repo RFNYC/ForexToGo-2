@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 //creates a component function using const 
@@ -8,6 +8,25 @@ const MyComponent = ({text}) => (
   </View>
 );
 
+function NewComponent() {
+  const [data , setData] = useState(null)
+
+  useEffect(() => {
+      // # anytime fetch() is used the output is returned in a "promise" called a "response" object.
+      // # in order to get the data from the object you need to do something to the response
+      fetch('https://mywebsite.com/mydata.json')
+        .then(response => response.json())
+        .then((data) => {
+            console.log(data);
+            setData(data)
+      })
+      .catch(error => {
+              console.error('Error fetching data:', error);
+          });
+  }, [])
+
+  return <p>check console for data</p>
+}
 
 // Creates a list of items, adds a custom entry, then renders each entry as a component.
 const App = () => {
@@ -28,7 +47,9 @@ const App = () => {
     <View style={styles.container}>
       {items.map((content, index_num) => (
         <MyComponent key={index_num} text={content} />
+        
       ))}
+      <NewComponent/>
     </View>
   );
 };

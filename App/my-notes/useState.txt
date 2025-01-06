@@ -1,22 +1,22 @@
 USE STATE:
 
-React components ( <Text/> ) have the ability to remember certain values called a "state" with useEffect heres how to do that.
+React components ( <Text/> ) have the ability to remember certain values called a "state" with useState heres how to do that.
 
-import { useEffect } from "react";
+import { useState } from "react";
 
 value is the original variable and setValue is a function that allows it to be changed
-useEffect() is the initial value of the variable
+useState() is the initial value of the variable
 
 This says create a variable named value that can be changed, its initial value is null (nothing).
 function randomComponent() {
-    const [value, setValue] = useEffect(null)
+    const [value, setValue] = useState(null)
 }
 
 Using a nested function and setValue(); we can change this variable
 
 This is a button whos content starts off as nothing but changes to C when clicked.
 function randomComponent() {
-    const [value, setValue] = useEffect(null)
+    const [value, setValue] = useState(null)
    function clickEvent() {
 	console.log("button was clicked")
 	setValue("C");
@@ -39,8 +39,8 @@ Heres how you can lift a state to the parent.
 Your component might look like this:
 
 function randomComponent({value}) {
-    --sets current value to nothing
-    const [state, setState] = useEffect(null)
+    # sets current value to nothing
+    const [state, setState] = useState(null)
 
     function someEvent() {
         setState("new_value");
@@ -52,7 +52,7 @@ These states will be passed down to your components through some indexing (state
 For this example will use the 3 rows example:
 
 export default function componentContainer() {
-    const [states, setStates] = useEffect(Array(3).fill(null))
+    const [states, setStates] = useState(Array(3).fill(null))
 
     return (
         <div className="board-row">
