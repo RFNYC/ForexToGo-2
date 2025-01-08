@@ -4,39 +4,51 @@ import { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
 import React from "react";
 
-const pic1 = "JPY"
-const pic2 = "USD"
-const pic3 = "CHF"
-const pic4 = "GBP"
+const NoImpact = require("../../assets/images/noImpact.png")
 
-export default function FourSquareComp() {
+export default function CellComponent() {
     return (
-        <View style={styles.container}>
-            <View style={styles.images}>
-                <Image style={[styles.img, {borderTopLeftRadius:9}]} source={require(`../../assets/images/${pic1}.png`)} /> 
-                <Image style={[styles.img, {borderTopRightRadius:9}]} source={require(`../../assets/images/${pic2}.png`)} /> 
-                <Image style={[styles.img, {borderBottomLeftRadius:9}]} source={require(`../../assets/images/${pic3}.png`)} /> 
-                <Image style={[styles.img, {borderBottomRightRadius:9}]} source={require(`../../assets/images/${pic4}.png`)} /> 
-            </View>
+        <View style={{width:"auto",display:"flex",padding:15}}>
+            <Image source={NoImpact} style={{display:"flex",width:20,height:20, flexGrow:1, objectFit:"contain"}}/>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width:"auto",
-        position:"relative",
-    },
-    images: {
-        display:"flex",
-        flexWrap:"wrap",
-        flexDirection:"row"
-    },
-    img: {
-        flexGrow:1,
-        width:132,
-        height:110,
-        objectFit:"cover"
-    }
+    // SquareContainer: {
+    //     width:"auto",
+    //     height:"auto",
+    //     position:"relative",
+    //     textAlign:"center",
+    //     paddingBottom:30
 
+    // },
+    // images: {
+    //     display:"flex",
+    //     flexWrap:"wrap",
+    //     flexDirection:"row",
+    //     gap:3,
+    // },
+    // img: {
+    //     flexGrow:1,
+    //     width:132,
+    //     height:170,
+    //     objectFit:"cover",
+    // },
+    // leftCurrency: {
+    //     position:"absolute",
+    //     fontSize:55,
+    //     fontWeight:"500",
+    //     color:"white",
+    //     top:"23%",
+    //     left:"10%"
+    // },
+    // rightCurrency: {
+    //     position:"absolute",
+    //     fontSize:55,
+    //     fontWeight:"500",
+    //     color:"white",
+    //     top:"23%",
+    //     left:"60%"
+    // } 
 })
