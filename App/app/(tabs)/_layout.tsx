@@ -14,7 +14,7 @@ export default function TabsLayout() {
             screenOptions={{
                 tabBarActiveTintColor:"green",
                 headerStyle:{
-                    backgroundColor:"#003366",
+                    backgroundColor:"white",
                 },
                 headerShown: true,
                 tabBarLabelPosition: "beside-icon",
@@ -32,25 +32,34 @@ export default function TabsLayout() {
             />
             <Tabs.Screen name="Home"
              options={{
-                    headerLeft: null,
                     tabBarIcon: ({ color, focused }) => (
                         <Ionicons name={focused ? "newspaper": "newspaper-outline"} color={color} size={24} />
                       ),
-                    headerTitle: "FOREX TO GO!",
-                    headerTitleAlign:"center",
+                    headerTitle: "News",
+                    headerTitleAlign:"left",
+                    headerStyle: {
+                        borderBottomWidth: 0, // Add border width
+                        borderBottomColor: '#003366', // Set border color
+                        backgroundColor:"#003366"
+                    },
                     headerTitleStyle: {
-                        fontSize:15,
+                        fontSize:20,
                         color:"white",
                         fontWeight:"bold",
-                        fontStyle:"italic"
                     }
                 }}
              />
             <Tabs.Screen name="Settings" options={{
-                headerTitle:"About1",
+                headerTitle:"Settings",
                 tabBarIcon: ({ color, focused }) => (
                     <Ionicons name={focused ? "settings" : "settings-outline"} color={color} size={24} />
-                  )
+                  ),
+                    headerTitleAlign:"left",
+                    headerTitleStyle: {
+                        fontSize:20,
+                        color:"#003366",
+                        fontWeight:"bold",
+                    }
                 }}
             />
         </Tabs>

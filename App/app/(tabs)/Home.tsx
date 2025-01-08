@@ -1,11 +1,20 @@
 import { Link } from "expo-router";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
+import React from "react";
+import "./test"
+import FourSquareComp from "./test";
 
-const NewComponent = () => {
-  return <Text>This is a const component</Text>
-}
+const Line = require("../../assets/images/Line1.png")
+const AUD = require("../../assets/images/AUD.jpeg")
+const CHF = require("../../assets/images/CHF.png")
+const CNY = require("../../assets/images/CNY.png")
+const EUR = require("../../assets/images/EUR.png")
+const GBP = require("../../assets/images/GBP.png")
+const JPY = require("../../assets/images/JPY.png")
+const NZD = require("../../assets/images/NZD.png")
+const USD = require("../../assets/images/USD.png")
 
 export default function Index() {
 
@@ -54,28 +63,60 @@ export default function Index() {
     <View id="container"
         style={styles.container}
     >
-      <Text style={styles.subheader}>Todays News:</Text>
-      <Text id="line">⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
-      <Link href={"/about"} style={styles.Links}>DATA.</Link>   
-
+      <View style={styles.userTextContainer}>
+        <Text style={styles.userText}>Hi, Ishmam.</Text>
+        <Text style={styles.userSubText}>Welcome back!</Text>
+        
+        <Text style={styles.currencyHeader}>Currencies you're watching:</Text>
+          <View style={styles.SquareComponent}>
+            <FourSquareComp/>
+          </View>
+      </View>
+      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    maxWidth:"auto",
+    width:"auto",
+    height:30,
     backgroundColor:"white",
-    justifyContent: "center",
-    alignItems: "center",
     flex:1
   },
-  subheader: {
+  userTextContainer: {
+    flex:1,
+    justifyContent:"flex-start",
+    paddingLeft:15,
+    paddingTop:19,
+  },
+  userText: {
     color:"#393939",
-    fontSize:32,
-    fontWeight:"bold",
+    fontSize:24,
+    fontFamily:"sans-serif-thai"
+  },
+  userSubText: {
+    paddingTop:4,
+    color:"#6C6C6C",
+    fontSize:15,
+    fontWeight:"regular",
+    fontFamily:"sans-serif-thai",
+    paddingBottom:10
+  },
+  currencyHeader: {
+    paddingTop:10,
+    color:"black",
+    fontSize:15,
+    fontWeight:"regular",
+    fontFamily:"sans-serif-thai"
   },
   Links: {
     textDecorationLine: "underline",
     color: "blue"
-  }
+  },
+  SquareComponent: {
+    paddingTop:10,
+    maxWidth:"96%"
+  },
 })
