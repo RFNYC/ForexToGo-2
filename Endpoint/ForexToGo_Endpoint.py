@@ -66,6 +66,14 @@ driver.get(url)
 News_Event_Titles_List = driver.find_elements(By.CLASS_NAME, 'calendar__event-title')
 Currencies_Impacted_List = driver.find_elements(By.CSS_SELECTOR, 'td.calendar__currency')
 Calendar_Time_List = driver.find_elements(By.CSS_SELECTOR, 'td.calendar__time')
+Actual_List = driver.find_elements(By.CSS_SELECTOR,'td.calendar__actual')
+Forecasted_List = driver.find_elements(By.CSS_SELECTOR,'td.calendar__forecast')
+Previous_List = driver.find_elements(By.CSS_SELECTOR, 'td.calendar__previous')
+
+# If you wanted to add more using the same method unit test them here. They return an array that needs to be formatted using .text
+# print(Actual_List[0].text)
+# print(Forecasted_List[0].text)
+# print(Previous_List[0].text)
 
 # Because Forex factory didn't give a unique ID to the Impact icons I needed to first find its parent element, then save its first child.
 # It's first child has a title attribute that gives you pop-up text that correlates to the impact level. I grab this title in my for-loop later.
@@ -86,6 +94,18 @@ Event_Impact_Level_Dictionary = {
 }
 
 Calendar_Time_Dict = {
+
+}
+
+Actual_Dict = {
+
+}
+
+Forecasted_Dict = {
+
+}
+
+Previous_Dict = {
 
 }
 
@@ -120,6 +140,9 @@ for news_entry_num in range(len(News_Event_Titles_List)):
     Impact_level_DOM_title = Event_Impact_Level_Icons[news_entry_num].find_element(By.TAG_NAME, 'span')
     Event_Impact_Level_Dictionary[f"Impact-Level-Cell{news_entry_num}"] = f"{Impact_level_DOM_title.get_attribute('title')}"
     Calendar_Time_Dict[f"Calendar-Time-Cell{news_entry_num}"] = f"{Calendar_Time_List[news_entry_num].text}"
+    Actual_Dict[f"Actual-Cell{news_entry_num}"] = f"{Actual_List[news_entry_num].text}"
+    Forecasted_Dict[f"Forecasted-Cell{news_entry_num}"] = f"{Forecasted_List[news_entry_num].text}"
+    Previous_Dict[f"Previous-Cell{news_entry_num}"] = f"{Previous_List[news_entry_num].text}"
 
 # Using collection_file.find_one(query_filter) produces a none type which caused errors so I had to get each document again manually.
 # I figured out that when the script is run again, if the data is replaced, so is the ID. Adding a custom ID works around this
@@ -128,6 +151,9 @@ News_Event_Title_Dictionary["SectionID"] = "News_Dictionary"
 Currencies_Impacted_Dictionary["SectionID"] = "Currency_Dictionary"
 Event_Impact_Level_Dictionary["SectionID"] = "Impact_Dictionary"
 Calendar_Time_Dict["SectionID"] = "Time_Dictionary"
+Actual_Dict["SectionID"] = "Actual_Dictionary"
+Forecasted_Dict["SectionID"] = "Forecasted_Dictionary"
+Previous_Dict["SectionID"] = "Previous_Dictionary"
 
 '''
 Because I didn't understand how to delete files automatically via MongoDB's expiration/timeseries system I opted to use an impromptu timestamp
@@ -142,6 +168,10 @@ News_Event_Title_Dictionary["timestamp"] = f"{posted_time}"
 Currencies_Impacted_Dictionary["timestamp"] = f"{posted_time}"
 Event_Impact_Level_Dictionary["timestamp"] = f"{posted_time}"
 Calendar_Time_Dict["timestamp"] = f"{posted_time}"
+Actual_Dict["timestamp"] = f"{posted_time}"
+Forecasted_Dict["timestamp"] = f"{posted_time}"
+Previous_Dict["timestamp"] = f"{posted_time}"
+
 
 """
 This system runs on the assumption that a timestamp already exists. When a timestamp is first uploaded to the dictionary datetime is considered 
@@ -158,6 +188,9 @@ query_filter1 = {"SectionID": "News_Dictionary"}
 query_filter2 = {"SectionID": "Currency_Dictionary"}
 query_filter3 = {"SectionID": "Impact_Dictionary"}
 query_filter4 = {"SectionID": "Time_Dictionary"}
+query_filter5 = {"SectionID": "Actual_Dictionary"}
+query_filter6 = {"SectionID": "Forecasted_Dictionary"}
+query_filter7 = {"SectionID": "Previous_Dictionary"}
 
 # Gets the {"timestamp":"<date>"} entry info from MongoDB and saves the date "20YY-MM-DD" into date_posted
 get_timestamp = collection_file.distinct("timestamp")
@@ -173,14 +206,17 @@ if answer == "Y":
 try:
     print(Response)
 except:
-# I only ever want there to be 4 entries each day. If there are already 4 entries from the same day, nothing is added.
+# I only ever want there to be 7 entries each day. If there are already 7 entries from the same day, nothing is added.
     if dictionary_count == 0:
         # If there  each dictionary into MongoDB.
         a = collection_file.insert_one(News_Event_Title_Dictionary) 
         b = collection_file.insert_one(Currencies_Impacted_Dictionary)
         c = collection_file.insert_one(Event_Impact_Level_Dictionary)
         d = collection_file.insert_one(Calendar_Time_Dict)
-    elif dictionary_count <= 4:
+        e = collection_file.insert_one(Actual_Dict)
+        f = collection_file.insert_one(Forecasted_Dict)
+        g = collection_file.insert_one(Previous_Dict)     
+    elif dictionary_count <= 7:
         # If theres already documents we can check for a timestamp string in the first doc of the collection.
         timestamp = get_timestamp[0]
         date_posted = timestamp[0:10]
@@ -192,23 +228,25 @@ except:
                 b = collection_file.insert_one(Currencies_Impacted_Dictionary)
                 c = collection_file.insert_one(Event_Impact_Level_Dictionary)
                 d = collection_file.insert_one(Calendar_Time_Dict)
-                # Ignore.
-                # collection_file.replace_one(query_filter1, News_Event_Title_Dictionary)
-                # collection_file.replace_one(query_filter2, Currencies_Impacted_Dictionary)
-                # collection_file.replace_one(query_filter3, Event_Impact_Level_Dictionary)
-                # collection_file.replace_one(query_filter4, Calendar_Time_Dict)
+                e = collection_file.insert_one(Actual_Dict)
+                f = collection_file.insert_one(Forecasted_Dict)
+                g = collection_file.insert_one(Previous_Dict)
         else:
             print("Some error has occured. Nothing was changed. Note: If today's date was logged twice the data should be up to date.")
 
-# Finds the documents I need and turns them into strings. If I don't returning these variables throws an error.
+# Finds the documents I need and saves them into 1 variable 
 # Also removed the "_id": ObjectID(...) field, it wasn't necessary and caused problems when converting to JSON.
 News_doc = (collection_file.find_one(query_filter1,{'_id': False}))
 Currency_doc = (collection_file.find_one(query_filter2,{'_id': False}))
 Impact_doc = (collection_file.find_one(query_filter3,{'_id': False}))
 Time_doc = (collection_file.find_one(query_filter4,{'_id': False}))
+Actual_doc = (collection_file.find_one(query_filter5,{'_id': False}))
+Forecasted_doc = (collection_file.find_one(query_filter6,{'_id': False}))
+Previous_doc = (collection_file.find_one(query_filter7,{'_id': False}))
+
 
 # Combines the strings from all dictionaries into one variable then formats it into JSON by editing the string.
-combinedData = (f'{News_doc},{Currency_doc},{Impact_doc},{Time_doc}')
+combinedData = (f'{News_doc},{Currency_doc},{Impact_doc},{Time_doc},{Actual_doc},{Forecasted_doc},{Previous_doc}')
 combinedData = combinedData.replace("'",'"')
 serverOutput = ("["+combinedData+"]")
 # print(serverOutput)
