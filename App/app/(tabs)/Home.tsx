@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, FlatList, ScrollView } from "react-nativ
 import { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
 import React from "react";
+
 const Line = require("../../assets/images/Line1.png")
 const AUD = require("../../assets/images/AUD.png")
 const CHF = require("../../assets/images/CHF.png")
@@ -50,12 +51,28 @@ export default function Index() {
       );
   }
 
+  function MarketOutlookComp({outlookImage, marketOutlook}) {
+    return (
+          <View style={styles.outlookHeader}>
+            <Text>Market Outlook:</Text>
+            <View style={{display:"flex",flexDirection:"row"}}>
+              <Image source={outlookImage} style={{width:9,height:9, top:7, right:1}}/>
+              <Text style={{fontSize:12, fontWeight:"500", top:2, left:4}}>{marketOutlook}</Text>
+            </View>
+          </View>
+    )
+  };
+
+  let img = require('../../assets/images/riskLow.png')
+  let text = "Low volatility"
 
     // The only way we can get the info we fetch later to render onto the page we need to have a useState.
   // useStates track changes to the array and if changed the page re-renders with those changes.
   // We're gonna create a state outside the useEffect which happens after the page loads to prepare.
   // creates a var "content" sets it equal to an array.
   const [content, setArray] = useState([])
+  const [headerText, setHeader] = useState([])
+  const [headerImage , setInner] = useState(null)
 
   useEffect(() => {
     // See https://reactnative.dev/docs/network the template.
@@ -101,6 +118,10 @@ export default function Index() {
           const forecastedStat = data[5]
           const previousStat = data[6]
           const content = []
+          const header = []
+          let volatileCount = 0
+          let headerOutLookImg;
+          let headerOutlookText;
           
           // Step 2
           // THANK YOU W3SCHOOLS !!! --> Creates an array [] of the possible object keys. Makes it easy to grab each one with an iterator
@@ -126,7 +147,7 @@ export default function Index() {
             // Step 4
              // `${}` essentially works in the same way as f"{}" in python does.
             const myOBJ = {}
-            myOBJ[ `SectionID`] = `Object${counter}`
+            myOBJ[ `id`] = `${counter}`
             myOBJ[`key1`] = newsEvents[`${eventCell}`]
             myOBJ[ `key2`] = currenciesImpacted[`${currencyCell}`]
             myOBJ[`key3`] = impactLevels[`${impactCell}`]
@@ -151,17 +172,45 @@ export default function Index() {
             } else if (impact == "Non-Economic") {
               imgImpact = require("../../assets/images/noImpact.png")
             }
+
+            if (impactLevels[`${impactCell}`] == "High Impact Expected") {
+              volatileCount++
+              
+            } else {
+              volatileCount+0
+            }
           
             myOBJ[`key8`] = imgImpact
             myOBJ[`key9`] = impactHeader
             myOBJ[`key10`] = "Actual"
             myOBJ[`key11`] = "Forecasted"
             myOBJ[`key12`] = "Previous"
+            myOBJ[`key13`] = headerOutLookImg
+            myOBJ[`key14`] = headerOutlookText
             // content.push(x) appends x to the array.
             content.push(myOBJ)
-      
           }    
+
+          let myImgObj = []
+
+          if (volatileCount >= 2) {
+            headerOutLookImg = require('../../assets/images/riskHigh.png')
+            headerOutlookText = "High Volatility"
+          } else if (volatileCount < 2 ) {
+            headerOutLookImg = require('../../assets/images/riskLow.png')
+            headerOutlookText = "Low Volatility"
+          }
+          
+          myImgObj.push(headerOutLookImg)
+          myImgObj.push(headerOutlookText)
+
+          header.push(myImgObj)
           setArray(content)
+
+          let inner_Array = header[0]
+          setHeader(inner_Array[1])
+          setInner(inner_Array[0])
+          
     })
     .catch(error => {
             console.error('Error fetching data:', error);
@@ -169,6 +218,8 @@ export default function Index() {
   }, [])
 
   console.log(content)
+  console.log(headerText)
+  console.log(headerImage)
 
   const Item = ({eventName, currencyName, impactName, eventTime, actual, forecasted, previous, img, impactTitle, actualTitle, forecastTitle, previousTitle}) => (
     <View style={styles.item}>
@@ -212,26 +263,7 @@ export default function Index() {
     </View>
   );
 
-  // placeholder values until I fetch the data.
-  let event_name = "German Bank Holiday"
-  let currency = "EUR"
-  let impact = "Non-Economic"
-  let time = "All Day"
-  const items = [];
-
-  let counter = 0
-  let num_events = 6
-  // Forloop that will be linked to the number of events in fetched data.
-  // Not sure why but the comparitor against the array length must be 4x the number of events for the day.
-  // Every iteration the loop appends information about that event to the list.
-  for (counter = 0; items.length < num_events*4; counter++ ){
-    items.push(event_name)
-    items.push(currency)
-    items.push(impact)
-    items.push(time)
-  }
-
-  useEffect(() => {
+    useEffect(() => {
     // Set the system navigation bar background color to match the app's background color
     NavigationBar.setBackgroundColorAsync('white'); // Replace with your background color
     NavigationBar.setButtonStyleAsync('dark'); // Set light buttons for visibility
@@ -253,10 +285,7 @@ export default function Index() {
             <Text style={styles.userText}>Hi, Ishmam.</Text>
             <Text style={styles.userSubText}>Welcome back!</Text>
           </View>
-          <View style={styles.outlookHeader}>
-            <Text>Market Outlook:</Text>
-            <Text>{marketOutlook}</Text>
-          </View>
+          <MarketOutlookComp outlookImage={headerImage} marketOutlook={headerText}/>
         </View>
         <Text style={styles.currencyHeader}>Currencies you're watching</Text>
           <View style={styles.SquareComponent}>
@@ -269,6 +298,7 @@ export default function Index() {
             data={content}
             renderItem={({item}) => <Item eventName={item.key1} currencyName={item.key2} impactName={item.key3} eventTime={item.key4} actual={item.key5} forecasted={item.key6} previous={item.key7} img={item.key8} impactTitle={item.key9} actualTitle={item.key10} forecastTitle={item.key11} previousTitle={item.key12}/>}
             keyExtractor={item => item.id}
+            scrollEnabled={false}
             />
         </ScrollView>
     </View>
@@ -312,7 +342,7 @@ const styles = StyleSheet.create({
   },
   outlookHeader: {
     fontWeight:"bold",
-    paddingTop:4,
+    paddingTop:9,
     paddingRight:2
   },
   currencyHeader: {
