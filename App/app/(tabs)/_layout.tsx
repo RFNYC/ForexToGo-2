@@ -38,8 +38,8 @@ export default function TabsLayout() {
                     headerTitle: "News",
                     headerTitleAlign:"left",
                     headerStyle: {
-                        borderBottomWidth: 0, // Add border width
-                        borderBottomColor: '#003366', // Set border color
+                        borderBottomWidth: 1, // Add border width
+                        borderBottomColor: '#DEDEDE', // Set border color
                         backgroundColor:"#003366"
                     },
                     headerTitleStyle: {
