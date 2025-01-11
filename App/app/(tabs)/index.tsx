@@ -29,7 +29,7 @@ export default function Index() {
         <Text style={styles.SloganText}>Know the news before the moves.</Text>
         <Text style={styles.DisclaimerHeader}>DISCLAIMER:</Text>
         <Text style={styles.DisclaimerText}>This project is solely for practice and educational purposes. All data displayed within the app is sourced from ForexFactory.com. This app is not intended for cloning or distribution for profit. I do not intend to make any financial gain from this project in any form.</Text>
-          <TouchableOpacity style={styles.button} onPress={() => router.push("/Home")}>
+          <TouchableOpacity style={styles.button} onPress={() => router.push("/index2")}>
             <Text style={styles.buttonText}>CONTINUE</Text>
           </TouchableOpacity>
       </View>
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
     paddingTop:"90%",
     marginLeft:"-10%",
     alignItems:"flex-start",
-    width:"80%"
+    width:"80%",
+    justifyContent:"center"
   },
   Links: {
     textDecorationLine: "underline",
@@ -83,7 +84,8 @@ const styles = StyleSheet.create({
   },
   SloganText: {
     paddingTop:10,
-    textAlign: "left",
+    textAlign: "center",
+    width:"auto",
     color:"white",
     fontSize:18,
     fontWeight: "bold",

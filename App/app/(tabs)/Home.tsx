@@ -63,10 +63,7 @@ export default function Index() {
     )
   };
 
-  let img = require('../../assets/images/riskLow.png')
-  let text = "Low volatility"
-
-    // The only way we can get the info we fetch later to render onto the page we need to have a useState.
+  // The only way we can get the info we fetch later to render onto the page we need to have a useState.
   // useStates track changes to the array and if changed the page re-renders with those changes.
   // We're gonna create a state outside the useEffect which happens after the page loads to prepare.
   // creates a var "content" sets it equal to an array.
@@ -190,6 +187,7 @@ export default function Index() {
             // content.push(x) appends x to the array.
             content.push(myOBJ)
           }    
+          //for loop ends
 
           let myImgObj = []
 
@@ -206,6 +204,7 @@ export default function Index() {
 
           header.push(myImgObj)
           setArray(content)
+          console.log(content)
 
           let inner_Array = header[0]
           setHeader(inner_Array[1])
@@ -218,9 +217,7 @@ export default function Index() {
   }, [])
 
   console.log(content)
-  console.log(headerText)
-  console.log(headerImage)
-
+  
   const Item = ({eventName, currencyName, impactName, eventTime, actual, forecasted, previous, img, impactTitle, actualTitle, forecastTitle, previousTitle}) => (
     <View style={styles.item}>
       <View style={{justifyContent:"flex-end",flexDirection:"row",}}>

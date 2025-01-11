@@ -30,6 +30,15 @@ export default function TabsLayout() {
                     tabBarButton: () => null, // Removes the tab icon/button completely
                  }}
             />
+
+            <Tabs.Screen name="index2"
+                 options={{
+                    headerShown: false, // Show header if needed
+                    tabBarStyle: { display: 'none' }, // Hides the tab bar for this screen
+                    tabBarButton: () => null, // Removes the tab icon/button completely
+                 }}
+            />
+
             <Tabs.Screen name="Home"
              options={{
                     tabBarIcon: ({ color, focused }) => (
