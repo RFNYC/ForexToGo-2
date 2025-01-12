@@ -27,17 +27,7 @@ export default function Index() {
     let arrayID = id.split(",")
     let imageMap1 = `${arrayID[0]}`
     let imageMap2 = `${arrayID[1]}`
-    console.log(arrayID[0])
-
-    console.log(arrayID)
-    let pic2 = "JPY"
     let pic1 = "USD"
-     
-    if (currencies.includes(arrayID[0]) == true) {
-      console.log(currencies.indexOf(arrayID[0]))
-      console.log(currencies[7])
-    }
-
   
   // These creates a custom components called <ComponentNameHere/> that we can reuse. It renders everything after return
   // Helps avoid long messy duplicated code. See "Component-Explanation.txt" for your notes on this.
@@ -100,6 +90,26 @@ export default function Index() {
       .then(response => response.json())
       .then((data) => {
           console.log(data)
+
+          // Keeps track of currencies impacted by each event.
+          const events = data[1]
+          const eventsArray = Object.values(events)
+          // Creates a place to store the objects from "data" we want displayed.
+           const filteredData = []
+           // Keeps track of what the user is looking for.
+           const trackedCurrencies = []
+
+           trackedCurrencies.push("JPY","AUD","CNY")
+
+           console.log(events)
+
+          for (let counter = 0; counter < eventsArray.length; counter++) {
+            // When logged should print individual currency. ex: "JPY"
+            let currentCurrency = trackedCurrencies[counter]
+            console.log(currentCurrency)
+            console.log(eventsArray.indexOf(currentCurrency))
+          }
+     
 
           /*
             Heres whats happening inside this useEffect:
@@ -187,6 +197,7 @@ export default function Index() {
               imgImpact = require("../../assets/images/highImpact.png")
               impactHeader = "High Impact"
             } else if (impact == "Non-Economic") {
+              impactHeader = "Non Economic"
               imgImpact = require("../../assets/images/noImpact.png")
             }
 
@@ -308,7 +319,6 @@ export default function Index() {
             <TopCurrencyPairComp currencyCode={`${imageMap1}`} currencyCode2={`${imageMap2}`}/>
           </View>
          <Text style={{fontWeight:"500"}}>Today's Forecast: </Text> 
-         <Text>{arrayID}</Text>
          <View style={styles.container}>
         <ScrollView style={{padding:0}}>
           <FlatList

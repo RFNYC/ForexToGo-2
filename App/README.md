@@ -1,6 +1,9 @@
 # Welcome to ForexToGo!
 
-This are the front-end files for the ForexToGo app.
+These are the front-end files for the ForexToGo app.
+
+Note 1/12/25:
+As of writing the app is in its first "Useable" state with some setup. When opened it gives a little disclaimer, then prompts the user to type their name along with their favorite currency pair. These things are displayed on the home page above a list of news events for that day.
 
 ---
 
