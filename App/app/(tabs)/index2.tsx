@@ -8,24 +8,42 @@ const backgroundImage = require("../../assets/images/frame-1.jpg")
 
 export default function Page1() {
 
-  const {id} = useLocalSearchParams();  // Accessing params directly
+  const {id, id2} = useLocalSearchParams();  // Accessing params directly
 
   const [userName, changePlaceholder] = useState("First name")
   const [prefPair, changePair] = useState("Ex: GBP/JPY")
+  const [nextPage, changeNextPage] = useState("Home")
+
+  //Possible currencies that can be entered...
+  const currencies = ['AUD','CAD','CHF','CNY','EUR','GBP','JPY','NZD','USD']
+  let properName;
+  let properCurrencies;
 
   // Creates variable to be passed by router.
-  let myUser;
+  let myInfo: (string | string[])[] = [];
+  let myCurrencies = [];
   // Edits variable based on user Input.
   function finishedTypingUser() {
-    myUser = userName
-    return console.log(userName)
+    myInfo.push(userName)
+    // If user submitted preview text or blank space they will not be routed further.
+    return console.log(myInfo)
   }
 
   function finishedTypingPair() {
-    console.log(prefPair)
-    let prefferedCurrencies = prefPair.split("/")
-    return console.log(prefferedCurrencies)
+
+    console.log(prefPair.toUpperCase())
+    let input = prefPair.toUpperCase()
+    let prefferedCurrencies = input.split("/")
+    myCurrencies = prefferedCurrencies
+
+    myInfo.push(prefferedCurrencies)
+
+    return (
+      console.log(myInfo)
+    ) 
   }
+
+  console.log(myInfo)
 
   useEffect(() => {
     // Set the system navigation bar background color to match the app's background color
@@ -40,6 +58,7 @@ export default function Page1() {
   }, []);
 
 
+
   return (
     <ImageBackground 
     source={backgroundImage} style={styles.container}>
@@ -48,6 +67,9 @@ export default function Page1() {
             <View style={styles.nameheader}>
                 <Text style={{color:"white", fontSize:37, fontWeight:"bold", textAlign:"center"}}>What's your{"\n"} name?</Text>
             </View>
+
+            <Text style={{textAlign:"center",fontSize:11, color:"grey", marginBottom:10, marginLeft:8, opacity:.3}}>Please press Done/Enter on your keyboard after typing.</Text>
+
             <View style={styles.userInputs}>
                 {/* 
                 React component "TextInput" has a default prop onchange text built in.
@@ -74,7 +96,7 @@ export default function Page1() {
             On press user is routed to path.
             data is also passed with it inside of params in the form of {id: value} value can be a string or var. 
             */}
-            <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:"/Home", params:{id:`${myUser}`, id2:"bob"}})}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:`${nextPage}`, params:{id:myInfo, id2:`${userName}`}})}>
                 <Text style={styles.buttonText}>CONTINUE</Text>
             </TouchableOpacity>
         </View>
@@ -138,5 +160,20 @@ const styles = StyleSheet.create({
     color: '#00254d', // Dark blue text
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
+  checkContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginVertical: 32,
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paragraph: {
+    fontSize: 15,
+  },
+  checkbox: {
+    margin: 8,
+  },
 })

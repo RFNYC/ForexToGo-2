@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
-import { View, Text, Button } from 'react-native';
+import Checkbox from 'expo-checkbox';
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  const [isChecked, setChecked] = useState(false);
 
 
-function Mycall(){
-  return <Text>this will be deleted.</Text>
+  let counter;
+  function myFunct() {
+    console.log("hello2")
+    counter+1
+    console.log(counter)
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={setChecked}
+          onChange={myFunct()}
+          color={isChecked ? '#4630EB' : undefined}
+        />
+        <Text style={styles.paragraph}>Custom colored checkbox</Text>
+      </View>
+    </View>
+  );
 }
 
-export default function mypage() {
-  // If set to false everything created via this variable disappears.
-  const [showComponent, setShowComponent] = useState(true);
-
-  // To keep track of whether or not the button has been clicked:
-  let isActive = "true"
-
-  // Calls show function and replaces it with false, when clicked. Causing the components created via variable to disappear.
-  const handleDelete = () => {
-    setShowComponent(false)  
-  };
-  return(
-    <View>
-        <View>
-      {showComponent && (
-        <View>
-          <Mycall/>
-        </View>
-      )}
-      <Button title="Delete" onPress={handleDelete}  />
-    </View>
-    </View>
-  )
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginVertical: 32,
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paragraph: {
+    fontSize: 15,
+  },
+  checkbox: {
+    margin: 8,
+  },
+});

@@ -5,23 +5,40 @@ import * as NavigationBar from 'expo-navigation-bar';
 import React from "react";
 
 const Line = require("../../assets/images/Line1.png")
-const AUD = require("../../assets/images/AUD.png")
-const CHF = require("../../assets/images/CHF.png")
-const CNY = require("../../assets/images/CNY.png")
-const EUR = require("../../assets/images/EUR.png")
-const GBP = require("../../assets/images/GBP.png")
-const JPY = require("../../assets/images/JPY.png")
-const NZD = require("../../assets/images/NZD.png")
-const USD = require("../../assets/images/USD.png")
 
-const pic1 = "USD"
-const pic2 = "JPY"
-var marketOutlook = "Highly Volatile"
 
 export default function Index() {
-
     const {id, id2} = useLocalSearchParams();  // Accessing params directly
+    const currencies = ['AUD','CAD','CHF','CNY','EUR','GBP','JPY','NZD','USD']
 
+    const currencyImages = {
+      AUD: require('../../assets/images/AUD.png'),
+      CAD: require('../../assets/images/CAD.png'),
+      CHF: require('../../assets/images/CHF.png'),
+      CNY: require('../../assets/images/CNY.png'),
+      EUR: require('../../assets/images/EUR.png'),
+      GBP: require('../../assets/images/GBP.png'),
+      JPY: require('../../assets/images/JPY.png'),
+      NZD: require('../../assets/images/NZD.png'),
+      USD: require('../../assets/images/USD.png'),
+    };
+
+
+    let arrayID = id.split(",")
+    let imageMap1 = `${arrayID[0]}`
+    let imageMap2 = `${arrayID[1]}`
+    console.log(arrayID[0])
+
+    console.log(arrayID)
+    let pic2 = "JPY"
+    let pic1 = "USD"
+     
+    if (currencies.includes(arrayID[0]) == true) {
+      console.log(currencies.indexOf(arrayID[0]))
+      console.log(currencies[7])
+    }
+
+  
   // These creates a custom components called <ComponentNameHere/> that we can reuse. It renders everything after return
   // Helps avoid long messy duplicated code. See "Component-Explanation.txt" for your notes on this.
   
@@ -38,15 +55,15 @@ export default function Index() {
     );
   }
 
-  function TopCurrencyPairComp() {
+  function TopCurrencyPairComp({currencyCode, currencyCode2}) {
       return (
           <View>
               <View style={styles.SquareContainer}>
                   <View style={styles.images}>
-                      <Image style={[styles.img, {borderTopLeftRadius:8,borderBottomLeftRadius:8}]} source={require(`../../assets/images/${pic1}.png`)} /> 
-                      <Image style={[styles.img, {borderTopRightRadius:8,borderBottomRightRadius:8}]} source={require(`../../assets/images/${pic2}.png`)} />
-                      <Text style={styles.leftCurrency}>{pic1}</Text>
-                      <Text style={styles.rightCurrency}>{pic2}</Text>
+                      <Image style={[styles.img, {borderTopLeftRadius:8,borderBottomLeftRadius:8}]} source={currencyImages[currencyCode]} /> 
+                      <Image style={[styles.img, {borderTopRightRadius:8,borderBottomRightRadius:8}]} source={currencyImages[currencyCode2]} />
+                      <Text style={styles.leftCurrency}>{arrayID[0]}</Text>
+                      <Text style={styles.rightCurrency}>{arrayID[1]}</Text>
                   </View>
               </View>
           </View>
@@ -109,6 +126,7 @@ export default function Index() {
 
           // Step 1
           // JS object containing news titles (dict in python)
+
           const newsEvents = data[0]
           const currenciesImpacted = data[1]
           const impactLevels = data[2]
@@ -218,7 +236,6 @@ export default function Index() {
         });
   }, [])
 
-  console.log(content)
   
   const Item = ({eventName, currencyName, impactName, eventTime, actual, forecasted, previous, img, impactTitle, actualTitle, forecastTitle, previousTitle}) => (
     <View style={styles.item}>
@@ -281,17 +298,17 @@ export default function Index() {
       <View style={styles.ElementsContainer}>
         <View style={styles.MainHeaders}>
           <View>
-            <Text style={styles.userText}>Hi, {id}.</Text>
+            <Text style={styles.userText}>Hi, {id2}.</Text>
             <Text style={styles.userSubText}>Welcome back!</Text>
           </View>
           <MarketOutlookComp outlookImage={headerImage} marketOutlook={headerText}/>
         </View>
         <Text style={styles.currencyHeader}>Currencies you're watching</Text>
           <View style={styles.SquareComponent}>
-            <TopCurrencyPairComp/>
+            <TopCurrencyPairComp currencyCode={`${imageMap1}`} currencyCode2={`${imageMap2}`}/>
           </View>
          <Text style={{fontWeight:"500"}}>Today's Forecast: </Text> 
-         <Text>{id2}</Text>
+         <Text>{arrayID}</Text>
          <View style={styles.container}>
         <ScrollView style={{padding:0}}>
           <FlatList
