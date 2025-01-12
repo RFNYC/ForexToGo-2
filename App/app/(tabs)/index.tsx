@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Button} from "react-native";
 import { useEffect } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
 import { Image, ImageBackground } from "react-native";
@@ -29,7 +29,8 @@ export default function Index() {
         <Text style={styles.SloganText}>Know the news before the moves.</Text>
         <Text style={styles.DisclaimerHeader}>DISCLAIMER:</Text>
         <Text style={styles.DisclaimerText}>This project is solely for practice and educational purposes. All data displayed within the app is sourced from ForexFactory.com. This app is not intended for cloning or distribution for profit. I do not intend to make any financial gain from this project in any form.</Text>
-          <TouchableOpacity style={styles.button} onPress={() => router.push("/index2")}>
+        
+          <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:"/index2"})}>
             <Text style={styles.buttonText}>CONTINUE</Text>
           </TouchableOpacity>
       </View>

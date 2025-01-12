@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { Text, View, StyleSheet, Image, FlatList, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
@@ -19,6 +19,8 @@ const pic2 = "JPY"
 var marketOutlook = "Highly Volatile"
 
 export default function Index() {
+
+    const {id, id2} = useLocalSearchParams();  // Accessing params directly
 
   // These creates a custom components called <ComponentNameHere/> that we can reuse. It renders everything after return
   // Helps avoid long messy duplicated code. See "Component-Explanation.txt" for your notes on this.
@@ -279,7 +281,7 @@ export default function Index() {
       <View style={styles.ElementsContainer}>
         <View style={styles.MainHeaders}>
           <View>
-            <Text style={styles.userText}>Hi, Ishmam.</Text>
+            <Text style={styles.userText}>Hi, {id}.</Text>
             <Text style={styles.userSubText}>Welcome back!</Text>
           </View>
           <MarketOutlookComp outlookImage={headerImage} marketOutlook={headerText}/>
@@ -289,6 +291,7 @@ export default function Index() {
             <TopCurrencyPairComp/>
           </View>
          <Text style={{fontWeight:"500"}}>Today's Forecast: </Text> 
+         <Text>{id2}</Text>
          <View style={styles.container}>
         <ScrollView style={{padding:0}}>
           <FlatList

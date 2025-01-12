@@ -1,12 +1,32 @@
-import { Link, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
-import { Image, ImageBackground } from "react-native";
+import { ImageBackground } from "react-native";
 
 const backgroundImage = require("../../assets/images/frame-1.jpg")
 
-export default function Index() {
+export default function Page1() {
+
+  const {id} = useLocalSearchParams();  // Accessing params directly
+
+  const [userName, changePlaceholder] = useState("First name")
+  const [prefPair, changePair] = useState("Ex: GBP/JPY")
+
+  // Creates variable to be passed by router.
+  let myUser;
+  // Edits variable based on user Input.
+  function finishedTypingUser() {
+    myUser = userName
+    return console.log(userName)
+  }
+
+  function finishedTypingPair() {
+    console.log(prefPair)
+    let prefferedCurrencies = prefPair.split("/")
+    return console.log(prefferedCurrencies)
+  }
+
   useEffect(() => {
     // Set the system navigation bar background color to match the app's background color
     NavigationBar.setBackgroundColorAsync('#042547'); // Replace with your background color
@@ -19,16 +39,7 @@ export default function Index() {
     };
   }, []);
 
-  const [userName, changePlaceholder] = useState("First name")
-  const [prefPair, changePair] = useState("Ex: GBP/JPY")
 
-  function finishedTypingUser() {
-    return console.log(userName)
-  }
-
-  function finishedTypingPair() {
-    return console.log(prefPair)
-  }
   return (
     <ImageBackground 
     source={backgroundImage} style={styles.container}>
@@ -59,7 +70,11 @@ export default function Index() {
             <View>
 
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => router.push("/Home")}>
+            {/* 
+            On press user is routed to path.
+            data is also passed with it inside of params in the form of {id: value} value can be a string or var. 
+            */}
+            <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:"/Home", params:{id:`${myUser}`, id2:"bob"}})}>
                 <Text style={styles.buttonText}>CONTINUE</Text>
             </TouchableOpacity>
         </View>
