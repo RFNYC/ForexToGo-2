@@ -7,4 +7,5 @@ My goal is to take that information and condense it into a space thats glanceabl
 ALL DATA DISPLAYED BELONGS TO FOREXFACTORY.COM.
 
 1/12/2025:
-As of writing the app is in its first useable state however its not packaged and is missing many features... I uploaded a demo video to the repository to show my progress in the meantime.
+As of writing the app is in its first useable state however its not packaged and is missing many features... I uploaded a demo video to the repository to show my progress in the meantime. 
+Demo video link: https://youtube.com/shorts/R7dZnueZ1l4
