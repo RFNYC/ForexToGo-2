@@ -87,7 +87,7 @@ export default function Page1() {
                 <TextInput placeholder={prefPair} placeholderTextColor={"#00468B"} onChangeText={changePair}  onSubmitEditing={finishedTypingPair} style={styles.inputBox1}></TextInput>
             </View>
             <View style={styles.nameheader}>
-                <Text style={{color:"white", fontSize:16, fontWeight:"bold", textAlign:"center"}}>What currencies do you trade?</Text>
+                {/* <Text style={{color:"white", fontSize:16, fontWeight:"bold", textAlign:"center"}}>What currencies do you trade?</Text> */}
             </View>
             <View>
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     display:"flex",
     width:"auto",
     height:"auto",
-    top:"10%",
+    top:"20%",
     padding:30
   },
   innerContainer: {
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     shadowColor: '#000',
     width:"auto",
+    padding:10,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3, // Android shadow

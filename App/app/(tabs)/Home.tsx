@@ -84,7 +84,7 @@ export default function Index() {
     // See https://reactnative.dev/docs/network the template.
     // anytime fetch() is used the output is returned in a "promise" called a "response" object.
     // in order to get the data from the object you need to do something to the response.
-    fetch('api')
+    fetch('http://192.168.1.152:5000/data')
     // after we recieve that response we returned it in a JSON format
     // then with the data we can choose to return number of things within the brackets {}.
       .then(response => response.json())
