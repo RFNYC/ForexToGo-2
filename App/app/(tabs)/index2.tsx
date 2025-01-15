@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView, } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as NavigationBar from 'expo-navigation-bar';
 import { ImageBackground } from "react-native";
@@ -8,16 +8,15 @@ const backgroundImage = require("../../assets/images/frame-1.jpg")
 
 export default function Page1() {
 
-  const {id, id2} = useLocalSearchParams();  // Accessing params directly
+  const {id, id2, id3} = useLocalSearchParams();  // Accessing params directly
 
   const [userName, changePlaceholder] = useState("First name")
   const [prefPair, changePair] = useState("Ex: GBP/JPY")
+  const [chosenCurrencies, changeChosenCurrencies] = useState("Ex: USD,EUR,GBP ...")
   const [nextPage, changeNextPage] = useState("Home")
 
   //Possible currencies that can be entered...
   const currencies = ['AUD','CAD','CHF','CNY','EUR','GBP','JPY','NZD','USD']
-  let properName;
-  let properCurrencies;
 
   // Creates variable to be passed by router.
   let myInfo: (string | string[])[] = [];
@@ -26,6 +25,11 @@ export default function Page1() {
   function finishedTypingUser() {
     myInfo.push(userName)
     // If user submitted preview text or blank space they will not be routed further.
+    return console.log(myInfo)
+  }
+
+  function finishedTypingCurrencies() {
+    myInfo.push(chosenCurrencies)
     return console.log(myInfo)
   }
 
@@ -62,7 +66,7 @@ export default function Page1() {
   return (
     <ImageBackground 
     source={backgroundImage} style={styles.container}>
-      <View style={styles.outerContainer}>
+      <ScrollView style={styles.outerContainer}>
         <View style={styles.innerContainer}>
             <View style={styles.nameheader}>
                 <Text style={{color:"white", fontSize:37, fontWeight:"bold", textAlign:"center"}}>What's your{"\n"} name?</Text>
@@ -87,20 +91,23 @@ export default function Page1() {
                 <TextInput placeholder={prefPair} placeholderTextColor={"#00468B"} onChangeText={changePair}  onSubmitEditing={finishedTypingPair} style={styles.inputBox1}></TextInput>
             </View>
             <View style={styles.nameheader}>
-                {/* <Text style={{color:"white", fontSize:16, fontWeight:"bold", textAlign:"center"}}>What currencies do you trade?</Text> */}
+                <Text style={{color:"white", fontSize:16, fontWeight:"bold", textAlign:"center"}}>What currencies do you trade?</Text>
+            </View>
+            <View style={styles.userInputs}>
+                <TextInput placeholder={chosenCurrencies} placeholderTextColor={"#00468B"} onChangeText={changeChosenCurrencies}  onSubmitEditing={finishedTypingCurrencies} style={styles.inputBox1}></TextInput>
             </View>
             <View>
-
+              <Text style={{justifyContent:"center", textAlign:"center", paddingTop:25, color:"white"}}>Available Currencies: AUD, CAD, CHF, CNY, EUR, GBP, GBP, JPY, NZD, USD</Text>
             </View>
             {/* 
             On press user is routed to path.
             data is also passed with it inside of params in the form of {id: value} value can be a string or var. 
             */}
-            <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:`${nextPage}`, params:{id:myInfo, id2:`${userName}`}})}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push({pathname:`${nextPage}`, params:{id:myInfo, id2:`${userName}`, id3: `${chosenCurrencies}`}})}>
                 <Text style={styles.buttonText}>CONTINUE</Text>
             </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -116,7 +123,7 @@ const styles = StyleSheet.create({
     display:"flex",
     width:"auto",
     height:"auto",
-    top:"20%",
+    top:"10%",
     padding:30
   },
   innerContainer: {
@@ -150,8 +157,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     shadowColor: '#000',
-    width:"auto",
+    width:"100%",
     padding:10,
+    marginTop:40,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3, // Android shadow

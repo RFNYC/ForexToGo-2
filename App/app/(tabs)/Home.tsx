@@ -8,8 +8,7 @@ const Line = require("../../assets/images/Line1.png")
 
 
 export default function Index() {
-    const {id, id2} = useLocalSearchParams();  // Accessing params directly
-    const currencies = ['AUD','CAD','CHF','CNY','EUR','GBP','JPY','NZD','USD']
+    const {id, id2, id3} = useLocalSearchParams();  // Accessing params directly
 
     const currencyImages = {
       AUD: require('../../assets/images/AUD.png'),
@@ -84,33 +83,12 @@ export default function Index() {
     // See https://reactnative.dev/docs/network the template.
     // anytime fetch() is used the output is returned in a "promise" called a "response" object.
     // in order to get the data from the object you need to do something to the response.
-    fetch('http://192.168.1.152:5000/data')
+    fetch('api')
     // after we recieve that response we returned it in a JSON format
     // then with the data we can choose to return number of things within the brackets {}.
       .then(response => response.json())
       .then((data) => {
           console.log(data)
-
-          // Keeps track of currencies impacted by each event.
-          const events = data[1]
-          const eventsArray = Object.values(events)
-          // Creates a place to store the objects from "data" we want displayed.
-           const filteredData = []
-           // Keeps track of what the user is looking for.
-           const trackedCurrencies = []
-
-           trackedCurrencies.push("JPY","AUD","CNY")
-
-           console.log(events)
-
-          for (let counter = 0; counter < eventsArray.length; counter++) {
-            // When logged should print individual currency. ex: "JPY"
-            let currentCurrency = trackedCurrencies[counter]
-            console.log(currentCurrency)
-            console.log(eventsArray.indexOf(currentCurrency))
-          }
-     
-
           /*
             Heres whats happening inside this useEffect:
             We have an array of objects (6) --> [{...},{...},{...}] and we need to pull data from each one.
@@ -186,7 +164,6 @@ export default function Index() {
             let impact = impactLevels[`${impactCell}`]
             let imgImpact;
             let impactHeader
-            console.log(impact)
             if (impact == "Low Impact Expected") {
               imgImpact = require("../../assets/images/lowImpact.png")
               impactHeader = "Low Impact"
@@ -235,7 +212,22 @@ export default function Index() {
 
           header.push(myImgObj)
           setArray(content)
-          console.log(content)
+
+          // Filter through fetched content
+          let Filtered_Currencies = id3.split(',')
+          const displayedNews = []
+
+          for (let counter = 0; counter < content.length; counter++) {
+            let checkedObject = content[counter]
+            if (Filtered_Currencies.includes(checkedObject['key2'])) {
+              console.log("Currency match was found.")
+              displayedNews.push(checkedObject)
+            } else {
+              console.log("Currency was not found.")
+            }
+          }
+        
+          setArray(displayedNews)
 
           let inner_Array = header[0]
           setHeader(inner_Array[1])
