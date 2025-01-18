@@ -78,7 +78,14 @@ Previous_List = driver.find_elements(By.CSS_SELECTOR, 'td.calendar__previous')
 # Because Forex factory didn't give a unique ID to the Impact icons I needed to first find its parent element, then save its first child.
 # It's first child has a title attribute that gives you pop-up text that correlates to the impact level. I grab this title in my for-loop later.
 Event_Impact_Level_Icons = driver.find_elements(By.CSS_SELECTOR, 'td.calendar__impact')
-Impact_level_DOM_title = Event_Impact_Level_Icons[0].find_element(By.TAG_NAME, 'span')
+
+# All other code up to this point will work if there is no news. However if there's no news this will throw an error.
+try:
+    Impact_level_DOM_title = Event_Impact_Level_Icons[0].find_element(By.TAG_NAME, 'span')
+    noNews = False
+except:
+    noNews = True
+    print("An error has occured scraping data from ForexFactory.com.")
 
 # Dictionaries for the scraped data to be stored temporarily before being sent to MongoDB.
 News_Event_Title_Dictionary = {
@@ -181,7 +188,6 @@ datetime, we will compare that to the current datetime.now, or in other words th
 # This is the string showing todays date in the form 20YY-DD-MM.
 current_time = str(datetime.datetime.now())
 date_today = (current_time[0:10])
-print(date_today)
 
 # Here are the Search filters to each dictionary:
 query_filter1 = {"SectionID": "News_Dictionary"}
@@ -195,14 +201,21 @@ query_filter7 = {"SectionID": "Previous_Dictionary"}
 # Gets the {"timestamp":"<date>"} entry info from MongoDB and saves the date "20YY-MM-DD" into date_posted
 get_timestamp = collection_file.distinct("timestamp")
 
-# Asks the user whether or not to run the script without scraping new data.
-print("Would you like to run the server using existing server data? (Best on weekends when theres no data to collect.)")
-print('"Y" for yes, "N" for no. ')
-answer = input().upper()
-print(f'You answered "{answer}"')
+# Asks user on the condition that news was found.
+if noNews == False:
+    # Asks the user whether or not to run the script without scraping new data.
+    print("Would you like to run the server using existing server data?")
+    print('"Y" for yes, "N" for no. ')
+    answer = input().upper()
+    print(f'You answered "{answer}"')
+else:
+    if noNews == True:
+        answer = "Y"
+
 if answer == "Y":
     Response = "Running with existing server data..."
 
+# This works because if the user typed "N" into the prompt it would throw an error. So its basically an if else (idk why i wrote it like that.)
 try:
     print(Response)
 except:
